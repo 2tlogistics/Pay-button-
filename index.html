@@ -12,7 +12,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f2f5; /* Fondo de color sólido */
+            background-color: #0F1D38; /* Azul marino */
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
         }
@@ -20,20 +20,39 @@
         .service-card {
             background-color: #ffffff;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra en la tarjeta */
-            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding-bottom: 40px; /* Ajuste para el contenido */
             max-width: 400px;
             text-align: center;
             position: relative;
             overflow: hidden;
             border: 1px solid #e0e0e0;
-            /* Eliminamos opacity: 0; y transform: translateY(50px); de aquí.
-               GSAP se encargará de establecer el estado inicial para la animación 'from'. */
+        }
+
+        .image-box {
+            width: 100%;
+            height: 200px; /* Altura fija para la imagen */
+            overflow: hidden;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            margin-bottom: 25px; /* Espacio entre imagen y contenido */
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+            transition: transform 0.3s ease;
+        }
+
+        .image-box img:hover {
+            transform: scale(1.05); /* Pequeño zoom al pasar el ratón */
         }
 
         .card-content {
             position: relative;
             z-index: 1;
+            padding: 0 40px; /* Padding para el texto y controles */
         }
 
         h2 {
@@ -143,6 +162,9 @@
 <body>
 
     <div class="service-card">
+        <div class="image-box">
+            <img src="https://picsum.photos/400/200?random=1" alt="Imagen del Servicio">
+            </div>
         <div class="card-content">
             <h2>Awesome Service Name</h2>
             <p>This is a fantastic service that will help you achieve your goals and provide immense value. It's designed to be efficient and user-friendly.</p>
@@ -165,8 +187,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("El script se está ejecutando."); // Mensaje para depuración
-
             const quantityInput = document.getElementById('quantity');
             const displayPrice = document.getElementById('display-price');
             const binancePayButton = document.querySelector('.binance-pay-button');
@@ -191,7 +211,20 @@
                 const currentQuantity = parseInt(quantityInput.value);
                 const currentPrice = (basePrice * currentQuantity).toFixed(2);
 
-                alert(`Iniciando Binance Pay para ${currentPrice} USDT por ${currentQuantity} artículo(s).\nID de Binance Pay: ${binanceId}`);
+                // --- INTEGRACIÓN DE BINANCE PAY (ESTO ES UN EJEMPLO/SIMULACIÓN) ---
+                // Para una integración real, NECESITAS un backend que genere la URL firmada.
+                // Esta URL es solo un ejemplo de la estructura esperada por Binance Pay SDK/API
+                // y no funcionará directamente para un pago real sin la lógica de backend.
+
+                const payUrl = `https://pay.binance.com/api/v1/private/payment/page?returnUrl=YOUR_SUCCESS_URL&cancelUrl=YOUR_CANCEL_URL&orderId=YOUR_UNIQUE_ORDER_ID&payAmount=${currentPrice}&payCurrency=USDT&payId=${binanceId}`;
+
+                console.log("Intentando abrir URL de Binance Pay:", payUrl);
+                alert(`Simulando intento de pago con Binance Pay.\nID: ${binanceId}\nCantidad: ${currentPrice} USDT\n\nEn un escenario real, esto te redirigiría a Binance Pay con una URL generada por el servidor.`);
+                
+                // Abre la URL simulada en una nueva pestaña
+                // window.open(payUrl, '_blank'); 
+                // NOTA: Descomenta la línea de arriba para intentar abrir la URL. 
+                // Recuerda que esta URL es SÓLO un EJEMPLO de formato y no iniciará un pago real.
             });
 
             // Animaciones GSAP
@@ -202,11 +235,19 @@
                 ease: "power3.out"
             });
 
+            gsap.from(".image-box", {
+                opacity: 0,
+                y: -20,
+                duration: 0.8,
+                delay: 0.2,
+                ease: "power2.out"
+            });
+
             gsap.from("h2", {
                 opacity: 0,
                 y: 20,
                 duration: 0.8,
-                delay: 0.3,
+                delay: 0.4,
                 ease: "power2.out"
             });
 
@@ -214,7 +255,7 @@
                 opacity: 0,
                 y: 20,
                 duration: 0.8,
-                delay: 0.5,
+                delay: 0.6,
                 ease: "power2.out"
             });
 
@@ -222,7 +263,7 @@
                 opacity: 0,
                 scale: 0.8,
                 duration: 0.8,
-                delay: 0.7,
+                delay: 0.8,
                 ease: "back.out(1.7)"
             });
 
@@ -230,7 +271,7 @@
                 opacity: 0,
                 y: 20,
                 duration: 0.8,
-                delay: 0.9,
+                delay: 1.0,
                 ease: "power2.out"
             });
 
@@ -238,7 +279,7 @@
                 opacity: 0,
                 scale: 0.8,
                 duration: 0.8,
-                delay: 1.1,
+                delay: 1.2,
                 ease: "elastic.out(1, 0.5)"
             });
         });
