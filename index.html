@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjeta de Servicio con Binance Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="mesh" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.5" fill="%23e0e0e0" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23mesh)"/><rect width="100%" height="100%" style="fill:url(%23mesh); opacity:0.1; transform:rotate(45deg); transform-origin:center center;"/><rect width="100%" height="100%" style="fill:url(%23mesh); opacity:0.1; transform:rotate(-45deg); transform-origin:center center;"/></svg>');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            animation: meshBackground 20s linear infinite;
+        }
+
+        @keyframes meshBackground {
+            from { background-position: 0% 0%; }
+            to { background-position: 100% 100%; }
+        }
+
+        .service-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            opacity: 0; /* Initial state for GSAP */
+            transform: translateY(50px); /* Initial state for GSAP */
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 700;
+            opacity: 0; /* Initial state for GSAP */
+            transform: translateY(20px); /* Initial state for GSAP */
+        }
+
+        p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            opacity: 0; /* Initial state for GSAP */
+            transform: translateY(20px); /* Initial state for GSAP */
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            margin-bottom: 25px;
+            opacity: 0; /* Initial state for GSAP */
+            transform: scale(0.8); /* Initial state for GSAP */
+        }
+
+        .price-label {
+            color: #555;
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+
+        .usdt-symbol {
+            color: #4CAF50; /* Color similar al verde de Binance */
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .current-price {
+            color: #333;
+            font-size: 2.2em;
+            font-weight: 800;
+        }
+
+        .quantity-selector {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; /* Initial state for GSAP */
+            transform: translateY(20px); /* Initial state for GSAP */
+        }
+
+        .quantity-selector label {
+            color: #555;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+
+        .quantity-selector input[type="number"] {
+            width: 70px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+            -moz-appearance: textfield; /* Ocultar flechas para Firefox */
+        }
+
+        /* Ocultar flechas para Chrome, Safari, Edge */
+        .quantity-selector input[type="number"]::-webkit-outer-spin-button,
+        .quantity-selector input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .binance-pay-button {
+            background-color: #FCD535; /* Amarillo Binance */
+            color: #1A1B20;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(252, 213, 53, 0.4);
+            opacity: 0; /* Initial state for GSAP */
+            transform: scale(0.8); /* Initial state for GSAP */
+        }
+
+        .binance-pay-button:hover {
+            background-color: #F0C419;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(252, 213, 53, 0.6);
+        }
+
+        .binance-pay-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(252, 213, 53, 0.3);
+        }
+
+        .binance-logo {
+            height: 24px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="service-card">
+        <div class="card-content">
+            <h2>Awesome Service Name</h2>
+            <p>This is a fantastic service that will help you achieve your goals and provide immense value. It's designed to be efficient and user-friendly.</p>
+            <div class="price-section">
+                <span class="price-label">Price:</span>
+                <span class="usdt-symbol">USDT</span>
+                <span id="display-price" class="current-price">10.00</span>
+            </div>
+            <div class="quantity-selector">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1">
+            </div>
+            <button class="binance-pay-button" data-binance-id="796932319" data-base-price="10">
+                <img src="https://www.binance.com/content/dam/bnc/img/binance-logo.svg" alt="Binance Pay" class="binance-logo">
+                Pay with Binance
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quantityInput = document.getElementById('quantity');
+            const displayPrice = document.getElementById('display-price');
+            const binancePayButton = document.querySelector('.binance-pay-button');
+            const basePrice = parseFloat(binancePayButton.dataset.basePrice);
+            const binanceId = binancePayButton.dataset.binanceId;
+
+            // Función para actualizar el precio mostrado
+            const updatePrice = () => {
+                const quantity = parseInt(quantityInput.value);
+                const newPrice = (basePrice * quantity).toFixed(2);
+                displayPrice.textContent = newPrice;
+            };
+
+            // Event listener para cambios en la cantidad
+            quantityInput.addEventListener('input', updatePrice);
+
+            // Actualización inicial del precio
+            updatePrice();
+
+            // Manejar el clic del botón de Binance Pay
+            binancePayButton.addEventListener('click', () => {
+                const currentQuantity = parseInt(quantityInput.value);
+                const currentPrice = (basePrice * currentQuantity).toFixed(2);
+
+                // En una aplicación real, generarías una URL de pago.
+                // Para demostración, solo registraremos la información.
+                alert(`Iniciando Binance Pay para ${currentPrice} USDT por ${currentQuantity} artículo(s).\nID de Binance Pay: ${binanceId}`);
+
+                // Aquí normalmente redirigirías a una URL de Binance Pay o harías una llamada a la API.
+                // Ejemplo (esto es un marcador de posición y no funcionará sin una integración real):
+                // window.location.href = `https://pay.binance.com/en/checkout?id=${binanceId}&amount=${currentPrice}&currency=USDT&...`;
+            });
+
+            // Animaciones GSAP
+            gsap.from(".service-card", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                ease: "power3.out"
+            });
+
+            gsap.from("h2", {
+                opacity: 0,
+                y: 20,
+                duration: 0.8,
+                delay: 0.3,
+                ease: "power2.out"
+            });
+
+            gsap.from("p", {
+                opacity: 0,
+                y: 20,
+                duration: 0.8,
+                delay: 0.5,
+                ease: "power2.out"
+            });
+
+            gsap.from(".price-section", {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.8,
+                delay: 0.7,
+                ease: "back.out(1.7)"
+            });
+
+            gsap.from(".quantity-selector", {
+                opacity: 0,
+                y: 20,
+                duration: 0.8,
+                delay: 0.9,
+                ease: "power2.out"
+            });
+
+            gsap.from(".binance-pay-button", {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.8,
+                delay: 1.1,
+                ease: "elastic.out(1, 0.5)"
+            });
+        });
+    </script>
+</body>
+</html>
