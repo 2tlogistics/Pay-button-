@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,8 +27,8 @@
             position: relative;
             overflow: hidden;
             border: 1px solid #e0e0e0;
-            opacity: 0; /* Estado inicial para GSAP */
-            transform: translateY(50px); /* Estado inicial para GSAP */
+            /* Eliminamos opacity: 0; y transform: translateY(50px); de aquí.
+               GSAP se encargará de establecer el estado inicial para la animación 'from'. */
         }
 
         .card-content {
@@ -42,8 +41,6 @@
             margin-bottom: 15px;
             font-size: 1.8em;
             font-weight: 700;
-            opacity: 0; /* Estado inicial para GSAP */
-            transform: translateY(20px); /* Estado inicial para GSAP */
         }
 
         p {
@@ -51,8 +48,6 @@
             font-size: 1em;
             line-height: 1.6;
             margin-bottom: 25px;
-            opacity: 0; /* Estado inicial para GSAP */
-            transform: translateY(20px); /* Estado inicial para GSAP */
         }
 
         .price-section {
@@ -60,8 +55,6 @@
             justify-content: center;
             align-items: baseline;
             margin-bottom: 25px;
-            opacity: 0; /* Estado inicial para GSAP */
-            transform: scale(0.8); /* Estado inicial para GSAP */
         }
 
         .price-label {
@@ -88,8 +81,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 0; /* Estado inicial para GSAP */
-            transform: translateY(20px); /* Estado inicial para GSAP */
         }
 
         .quantity-selector label {
@@ -130,8 +121,6 @@
             gap: 10px;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(252, 213, 53, 0.4);
-            opacity: 0; /* Estado inicial para GSAP */
-            transform: scale(0.8); /* Estado inicial para GSAP */
         }
 
         .binance-pay-button:hover {
@@ -176,6 +165,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("El script se está ejecutando."); // Mensaje para depuración
+
             const quantityInput = document.getElementById('quantity');
             const displayPrice = document.getElementById('display-price');
             const binancePayButton = document.querySelector('.binance-pay-button');
@@ -200,13 +191,7 @@
                 const currentQuantity = parseInt(quantityInput.value);
                 const currentPrice = (basePrice * currentQuantity).toFixed(2);
 
-                // En una aplicación real, generarías una URL de pago.
-                // Para demostración, solo registraremos la información.
                 alert(`Iniciando Binance Pay para ${currentPrice} USDT por ${currentQuantity} artículo(s).\nID de Binance Pay: ${binanceId}`);
-
-                // Aquí normalmente redirigirías a una URL de Binance Pay o harías una llamada a la API.
-                // Ejemplo (esto es un marcador de posición y no funcionará sin una integración real):
-                // window.location.href = `https://pay.binance.com/en/checkout?id=${binanceId}&amount=${currentPrice}&currency=USDT&...`;
             });
 
             // Animaciones GSAP
@@ -260,3 +245,4 @@
     </script>
 </body>
 </html>
+
